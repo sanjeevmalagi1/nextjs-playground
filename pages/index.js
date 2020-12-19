@@ -1,17 +1,19 @@
+import axios from 'axios';
 import Head from 'next/head'
+
+import Layout from '../components/Layout';
+
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+const Home = (props) => {
   return (
-    <div className={styles.container}>
+    <Layout>
       <Head>
         <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+        <h1>
+          1 Bitcoin = {props.bpi.USD.code} {props.bpi.USD.rate} = {props.bpi.EUR.code} {props.bpi.EUR.rate}
         </h1>
 
         <p className={styles.description}>
@@ -60,6 +62,13 @@ export default function Home() {
           <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
         </a>
       </footer>
-    </div>
+    </Layout>
   )
-}
+};
+
+export async function getServerSideProps(){
+  const res = await axios.get(`https://api.coindesk.com/v1/bpi/currentprice.json`);
+  return { props: res.data };
+};
+
+export default Home;
